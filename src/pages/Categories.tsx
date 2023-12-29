@@ -1,42 +1,69 @@
 import { FC, useState } from 'react'
 import { AiFillEdit, AiFillCloseCircle } from 'react-icons/ai'
 import { FaPlus } from 'react-icons/fa'
-import { Form, /* useActionData, */ useLoaderData } from 'react-router-dom'
+import { Form, useLoaderData } from 'react-router-dom'
 import CategoryModal from '../components/CategoryModal'
 import { instance } from '../api/axios.api'
 import { ICategory } from '../types/types'
-
-/* type ActionData = {
-	errMessage?: string | undefined
-} */
+import { AxiosError, AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
 
 export const categoriesAction = async ({ request }: any) => {
-	switch (request.method) {
-		case 'POST': {
-			const formData = await request.formData()
-			const title = {
-				title: formData.get('title'),
+	try {
+		switch (request.method) {
+			case 'POST': {
+				const formData = await request.formData()
+				const title = {
+					title: formData.get('title'),
+				}
+				try {
+					await instance.post('/categories', title)
+					toast.success('Category has been created')
+				} catch (err) {
+					if (err instanceof AxiosError) {
+						if (err.response && typeof err.response === 'object') {
+							const errResponse = err.response as AxiosResponse
+							alert(errResponse.data.message)
+							toast.error(errResponse.data.message)
+						}
+					}
+				}
+				return null
 			}
-			await instance.post('/categories', title)
-			return null
-		}
-		case 'PATCH': {
-			const formData = await request.formData()
-			/*if (!formData.get('title')) {
-				return  { errMessage: 'Type a new title, please' }
-			} */
-			const category = {
-				id: formData.get('id'),
-				title: formData.get('title'),
+			case 'PATCH': {
+				const formData = await request.formData()
+				const category = {
+					id: formData.get('id'),
+					title: formData.get('title'),
+				}
+				try {
+					await instance.patch(`/categories/category/${category.id}`, category)
+					toast.success('Category has been updated')
+				} catch (err) {
+					if (err instanceof AxiosError) {
+						if (err.response && typeof err.response === 'object') {
+							const errResponse = err.response as AxiosResponse
+							alert(errResponse.data.message)
+							toast.error(errResponse.data.message)
+						}
+					}
+				}
+				return null
 			}
-			await instance.patch(`/categories/category/${category.id}`, category)
-			return null
+			case 'DELETE': {
+				const formData = await request.formData()
+				const categoryId = formData.get('id')
+				await instance.delete(`/categories/category/${categoryId}`)
+				toast.success('Category has been deleted')
+				return null
+			}
 		}
-		case 'DELETE': {
-			const formData = await request.formData()
-			const categoryId = formData.get('id')
-			await instance.delete(`/categories/category/${categoryId}`)
-			return null
+	} catch (err) {
+		if (err instanceof AxiosError) {
+			if (err.response && typeof err.response === 'object') {
+				const errorResponse = err.response as AxiosResponse
+				console.log('Response data:', errorResponse.data)
+			}
 		}
 	}
 }
@@ -47,13 +74,25 @@ export const categoryLoader = async () => {
 }
 
 const Categories: FC = () => {
+	/* const [categories, setCategories] = useState<ICategory[]>([]) */
 	const categories = useLoaderData() as ICategory[]
+	console.log(categories)
+
 	const [visibleModal, setVisibleModal] = useState<boolean>(false)
 	const [categoryId, setCategoryId] = useState<number>(0)
 	const [isEdit, setIsEdit] = useState<boolean>(false)
 	const [categoryTitle, setCategoryTitle] = useState<string>('')
-	/* const { errMessage }: { errMessage?: string | undefined } =
-		useActionData() || {} */
+
+	/* useEffect(() => {
+		const fetchData = async () => {
+			const { data } = await instance.get<ICategory[]>('/categories')
+			setCategories(data)
+		}
+		fetchData()
+
+		
+	}, []) */
+
 	return (
 		<>
 			<div className="p-4 rounded-md bg-slate-800 mt-10">
@@ -108,7 +147,6 @@ const Categories: FC = () => {
 					id={categoryId}
 					setVisibleModal={setVisibleModal}
 					title={categoryTitle}
-					/* errMessage={errMessage} */
 				/>
 			)}
 		</>

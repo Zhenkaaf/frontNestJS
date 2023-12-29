@@ -1,40 +1,42 @@
 import { FC, useState } from 'react'
 import { Form } from 'react-router-dom'
+
 interface Props {
 	type: 'post' | 'patch'
 	id?: number
 	title?: string
-	/* errMessage?: string */
 	setVisibleModal: (visible: boolean) => void
 }
 
-const CategoryModal: FC<Props> = ({
-	type,
-	id,
-	title,
-	/* errMessage, */
-	setVisibleModal,
-}) => {
+const CategoryModal: FC<Props> = ({ type, id, title, setVisibleModal }) => {
 	const [newTitle, setNewTitle] = useState<string>('')
 
+	const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+		if (!newTitle.trim()) {
+			e.preventDefault()
+			alert('Type a new title, please')
+			return
+		}
+		/* const errResponseFromActio = useActionData() as AxiosResponse
+		console.log(errResponseFromActio)
+		if (errResponseFromActio) {
+			e.preventDefault()
+			console.log('tyt')
+			alert(errResponseFromActio.data.message)
+			return
+		} */
+		setVisibleModal(false)
+	}
 	return (
 		<div className="fixed top-0 left-0 bottom-0 right-0 h-full bg-black/50 flex justify-center items-center w-full">
 			<Form
 				className="grid gap-2 w-[300px] rounded-md bg-slate-900 p-5"
 				action="/categories"
 				method={type}
-				onSubmit={(e) => {
-					e.preventDefault()
-					if (!newTitle.trim()) {
-						alert('Type a new title, please')
-						return
-					}
-					setVisibleModal(false)
-				}}
+				onSubmit={(e) => onSubmitHandler(e)}
 			>
 				<label htmlFor="title">
 					<small>Category title</small>
-
 					<input
 						className="input w-full"
 						type="text"

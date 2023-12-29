@@ -1,8 +1,10 @@
 import { FC } from 'react'
 import pageNotFoundImg from './../assets/notFound.jpg'
-import { Link } from 'react-router-dom'
+import { Link, useRouteError } from 'react-router-dom'
 
 const ErrorPage: FC = () => {
+	const error = useRouteError()
+	console.log(error)
 	return (
 		<div className="min-h-screen bg-slate-900 font-roboto text-white flex flex-col items-center justify-center gap-10">
 			<img src={pageNotFoundImg} alt="" />

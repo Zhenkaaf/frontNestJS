@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 
 function App() {
 	const dispatch = useAppDispatch()
+	console.log('appPage')
 
 	const checkAuth = async () => {
 		const token = getTokenFromLocalStorage()
