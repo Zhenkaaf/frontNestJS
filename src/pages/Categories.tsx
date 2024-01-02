@@ -74,24 +74,11 @@ export const categoryLoader = async () => {
 }
 
 const Categories: FC = () => {
-	/* const [categories, setCategories] = useState<ICategory[]>([]) */
 	const categories = useLoaderData() as ICategory[]
-	console.log(categories)
-
 	const [visibleModal, setVisibleModal] = useState<boolean>(false)
 	const [categoryId, setCategoryId] = useState<number>(0)
 	const [isEdit, setIsEdit] = useState<boolean>(false)
 	const [categoryTitle, setCategoryTitle] = useState<string>('')
-
-	/* useEffect(() => {
-		const fetchData = async () => {
-			const { data } = await instance.get<ICategory[]>('/categories')
-			setCategories(data)
-		}
-		fetchData()
-
-		
-	}, []) */
 
 	return (
 		<>

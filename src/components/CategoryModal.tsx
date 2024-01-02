@@ -17,14 +17,6 @@ const CategoryModal: FC<Props> = ({ type, id, title, setVisibleModal }) => {
 			alert('Type a new title, please')
 			return
 		}
-		/* const errResponseFromActio = useActionData() as AxiosResponse
-		console.log(errResponseFromActio)
-		if (errResponseFromActio) {
-			e.preventDefault()
-			console.log('tyt')
-			alert(errResponseFromActio.data.message)
-			return
-		} */
 		setVisibleModal(false)
 	}
 	return (

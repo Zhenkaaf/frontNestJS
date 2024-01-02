@@ -25,3 +25,6 @@ export interface ICategory {
 	updatedAt: string
 	transactions: []
 }
+export interface IResponseTransactionLoader {
+	categories: ICategory[]
+}
