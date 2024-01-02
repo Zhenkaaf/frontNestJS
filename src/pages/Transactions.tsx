@@ -1,16 +1,27 @@
 import { FC } from 'react'
 import TransactionForm from '../components/TransactionForm'
 import { instance } from '../api/axios.api'
-import { ICategory } from '../types/types'
+import {
+	ICategory,
+	IResponseTransactionLoader,
+	ITransaction,
+} from '../types/types'
 import { toast } from 'react-toastify'
 import TransactionTable from '../components/TransactionTable'
+import { useLoaderData } from 'react-router-dom'
+import { formatToUSD } from '../helpers/currency.helper'
+import Chart from '../components/Chart'
 
 export const transactionLoader = async () => {
 	const categories = await instance.get<ICategory[]>('/categories')
-	const transactions = await instance.get<ICategory[]>('/transactions')
+	const transactions = await instance.get<ITransaction[]>('/transactions')
+	const totalIncome = await instance.get<number>('/transactions/income/find')
+	const totalExpense = await instance.get<number>('/transactions/expense/find')
 	const data = {
 		categories: categories.data,
 		transactions: transactions.data,
+		totalIncome: totalIncome.data,
+		totalExpense: totalExpense.data,
 	}
 	return data
 }
@@ -39,6 +50,8 @@ export const transactionAction = async ({ request }: any) => {
 }
 
 const Transactions: FC = () => {
+	const { totalExpense, totalIncome } =
+		useLoaderData() as IResponseTransactionLoader
 	return (
 		<>
 			<div className="grid grid-cols-3 gap-4 mt-4 items-start">
@@ -52,16 +65,21 @@ const Transactions: FC = () => {
 								Total Income:
 							</p>
 							<p className="mt-2 rounded-sm bg-green-600 p-1 text-center">
-								1000$
+								{formatToUSD(totalIncome)}
 							</p>
 						</div>
 						<div>
 							<p className="uppercase text-md font-bold text-center">
 								Total Expense:
 							</p>
-							<p className="mt-2 rounded-sm bg-red-500 p-1 text-center">300$</p>
+							<p className="mt-2 rounded-sm bg-red-500 p-1 text-center">
+								{formatToUSD(totalExpense)}
+							</p>
 						</div>
 					</div>
+					<>
+						<Chart totalIncome={totalIncome} totalExpense={totalExpense} />
+					</>
 				</div>
 			</div>
 
