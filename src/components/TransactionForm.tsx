@@ -53,18 +53,6 @@ const TransactionForm: FC = () => {
 					</h3>
 				)}
 
-				{/* Add category */}
-				<button
-					className="max-w-fit items-center gap-2 text-white/50 hover:text-white flex"
-					onClick={(e) => {
-						/* e.preventDefault() */
-						setVisibleModal(true)
-					}}
-				>
-					<FaPlus />
-					<span>Manage Categories:</span>
-				</button>
-
 				{/* radio Buttons */}
 				<div className="flex gap-4 items-center">
 					<label className="flex cursor-pointer items-center gap-2" htmlFor="">
@@ -73,6 +61,7 @@ const TransactionForm: FC = () => {
 							type="radio"
 							name="type"
 							value={'income'}
+							required
 						/>
 						<span>Income</span>
 					</label>
@@ -82,13 +71,24 @@ const TransactionForm: FC = () => {
 							type="radio"
 							name="type"
 							value={'expense'}
+							required
 						/>
 						<span>Expense</span>
 					</label>
 				</div>
 				{/* submit button */}
-				<button className="btn btn-green max-w-fit mt-2">Submit</button>
+				<button className="btn btn-green max-w-fit mt-2 mb-5">Submit</button>
 			</Form>
+			{/* Add category */}
+			<button
+				className="max-w-fit items-center gap-2 text-white/50 hover:text-white flex"
+				onClick={() => {
+					setVisibleModal(true)
+				}}
+			>
+				<FaPlus />
+				<span>Manage Categories:</span>
+			</button>
 
 			{visibleModal && (
 				<CategoryModal type="post" setVisibleModal={setVisibleModal} />
